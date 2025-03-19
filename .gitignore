@@ -3,7 +3,10 @@ db/lockbyte.db
 
 
 /target/
-!.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/*
+!.mvn/wrapper/maven-wrapper.properties
+
+
 .DS_Store
 
 ### STS ###
