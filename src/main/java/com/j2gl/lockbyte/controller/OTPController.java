@@ -1,7 +1,7 @@
 package com.j2gl.lockbyte.controller;
 
-import com.j2gl.lockbyte.model.User;
-import com.j2gl.lockbyte.repository.UserRepository;
+import com.j2gl.lockbyte.model.OTPAccount;
+import com.j2gl.lockbyte.repository.OTPAccountRepository;
 import com.j2gl.lockbyte.util.TOTPUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +11,12 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/otp")
 public class OTPController {
-    private final UserRepository userRepository;
+    private final OTPAccountRepository otpAccountRepository;
+    private final TOTPUtil totpUtil;
 
-    public OTPController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public OTPController(OTPAccountRepository userRepository, TOTPUtil totpUtil) {
+        this.otpAccountRepository = userRepository;
+        this.totpUtil = totpUtil;
     }
 
     @PostMapping("/register")
@@ -22,13 +24,13 @@ public class OTPController {
                                                @RequestParam(required = false) String secretKey) {
         try {
             if (secretKey == null || secretKey.isEmpty()) {
-                secretKey = TOTPUtil.generateSecretKey(); // Generate if not provided
+                secretKey = totpUtil.generateSecretKey(); // Generate if not provided
             }
 
-            User user = new User();
+            OTPAccount user = new OTPAccount();
             user.setUsername(username);
             user.setSecretKey(secretKey);
-            userRepository.save(user);
+            otpAccountRepository.save(user);
 
             return ResponseEntity.ok("User registered with secret key: " + secretKey);
         } catch (Exception e) {
@@ -39,10 +41,10 @@ public class OTPController {
 
     @GetMapping("/generate/{username}")
     public ResponseEntity<String> generateOTP(@PathVariable String username) {
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<OTPAccount> user = otpAccountRepository.findByUsername(username);
         if (user.isPresent()) {
             try {
-                String otp = TOTPUtil.generateTOTP(user.get().getSecretKey());
+                String otp = totpUtil.generateTOTP(user.get().getSecretKey());
                 return ResponseEntity.ok(otp);
             } catch (Exception e) {
                 return ResponseEntity.internalServerError().body("Error generating OTP");
