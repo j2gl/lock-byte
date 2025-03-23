@@ -27,3 +27,13 @@ ipcMain.handle('fetch-otp', async (event, username) => {
     }
 });
 
+ipcMain.handle('fetch-accounts', async () => {
+    try {
+        const response = await axios.get('http://localhost:8080/api/otp/accounts');
+        return response.data;
+    } catch (error) {
+        return [];
+    }
+});
+
+

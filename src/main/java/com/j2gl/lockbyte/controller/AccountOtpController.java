@@ -58,4 +58,9 @@ public class AccountOtpController {
         }
     }
 
+    @GetMapping("/accounts")
+    public ResponseEntity<?> getAllAccounts() {
+        return ResponseEntity.ok(accountOtpRepository.findAll());
+    }
+
 }
