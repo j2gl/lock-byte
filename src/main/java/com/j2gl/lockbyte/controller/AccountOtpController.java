@@ -2,17 +2,13 @@ package com.j2gl.lockbyte.controller;
 
 import com.j2gl.lockbyte.model.AccountOtp;
 import com.j2gl.lockbyte.repository.AccountOtpRepository;
+import com.j2gl.lockbyte.security.JwtUtil;
 import com.j2gl.lockbyte.util.TOTPUtil;
 
 import lombok.AllArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -59,7 +55,11 @@ public class AccountOtpController {
     }
 
     @GetMapping("/accounts")
-    public ResponseEntity<?> getAllAccounts() {
+    public ResponseEntity<?> getAllAccounts(@RequestHeader("Authorization") String token) {
+        if (!JwtUtil.validateToken(token.replace("Bearer ", ""))) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+
         return ResponseEntity.ok(accountOtpRepository.findAll());
     }
 

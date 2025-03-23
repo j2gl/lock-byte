@@ -33,16 +33,30 @@
 </head>
 <body>
 <div class="container">
-    <h2>🔐 LockByte</h2>
 
-    <h4>Accounts</h4>
-    <ul id="accountList" class="list-group mb-3"></ul>
-
-    <div class="otp-box">
-        OTP: <span id="otp">-</span>
+    <!-- Login Form -->
+    <div id="auth" class="container">
+        <h2>🔑 Login</h2>
+        <input type="text" id="username" class="form-control mb-2" placeholder="Username">
+        <input type="password" id="password" class="form-control mb-2" placeholder="Password">
+        <button class="btn btn-primary w-100" onclick="login()">Login</button>
     </div>
-    <p id="timer">Next update: 30s</p>
+
+    <!-- App UI (hidden until login) -->
+    <div id="app" class="container" style="display: none;">
+        <h2>🔐 LockByte</h2>
+
+        <h4>Accounts</h4>
+        <ul id="accountList" class="list-group mb-3"></ul>
+
+        <div class="otp-box">
+            OTP: <span id="otp">-</span>
+        </div>
+        <p id="timer">Next update: 30s</p>
+        <button class="btn btn-danger w-100 mt-3" onclick="logout()">Logout</button>
+    </div>
 </div>
+
 </body>
 
 </html>
